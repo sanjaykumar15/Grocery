@@ -37,7 +37,12 @@ fun HomeScreen(
     onEvent: (HomeScreenEvents) -> Unit,
 ) {
     if (state.isInit) {
-        onEvent(HomeScreenEvents.OnRefresh(false))
+        onEvent(
+            HomeScreenEvents.OnInitRefresh(
+                isCart = navItem.isCart,
+                typeId = navItem.typeId
+            )
+        )
     }
 
     Scaffold(
@@ -106,7 +111,7 @@ fun HomeScreen(
                 ErrorView(
                     errorMsg = state.error
                 ) {
-                    onEvent(HomeScreenEvents.OnRefresh(true))
+                    onEvent(HomeScreenEvents.OnRefresh)
                 }
             } else {
                 if (state.error.isNotEmpty()) {

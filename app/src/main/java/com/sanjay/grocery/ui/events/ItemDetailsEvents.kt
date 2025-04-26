@@ -10,5 +10,5 @@ sealed class ItemDetailsEvents {
     ) : ItemDetailsEvents()
 
     data class ShowToast(val msg: String) : ItemDetailsEvents()
-    data class OnAddToCart(val tyreId: Int) : ItemDetailsEvents()
+    data class OnAddToCart(val typeId: Int?) : ItemDetailsEvents()
 }

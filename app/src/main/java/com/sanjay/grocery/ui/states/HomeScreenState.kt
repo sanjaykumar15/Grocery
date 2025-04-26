@@ -16,4 +16,5 @@ data class HomeScreenState(
         BottomBarItem.Profile
     ),
     val selectedScreen: BottomBarItem = BottomBarItem.Home,
+    val selectedTypeId: Int? = null,
 )

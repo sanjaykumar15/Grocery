@@ -34,7 +34,7 @@ fun GroceryNav(
                 onEvent = { event ->
                     when (event) {
                         is MainScreenEvents.OnOrderNow -> {
-                            navController.navigate(HomeScreenNav)
+                            navController.navigate(HomeScreenNav())
                         }
 
                         is MainScreenEvents.OnDismiss -> {
@@ -111,6 +111,7 @@ fun GroceryNav(
                 }
             )
         }
+
         composable<ItemDetailsNav> {
             val viewModel = hiltViewModel<ItemDetailsVM>()
             ItemDetailsScreen(
@@ -131,7 +132,7 @@ fun GroceryNav(
                             navController.navigate(
                                 HomeScreenNav(
                                     isCart = true,
-                                    tyreId = event.tyreId
+                                    typeId = event.typeId
                                 )
                             )
                         }

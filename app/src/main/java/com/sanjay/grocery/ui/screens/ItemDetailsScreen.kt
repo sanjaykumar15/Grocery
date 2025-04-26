@@ -210,7 +210,7 @@ fun ItemDetailsScreen(
                         disabledContainerColor = Gray,
                     ),
                     onClick = {
-
+                        onEvent(ItemDetailsEvents.OnAddToCart(state.selectedTypeID))
                     }
                 ) {
                     Row(

@@ -8,7 +8,7 @@ data object MainScreen
 @Serializable
 data class HomeScreenNav(
     val isCart: Boolean = false,
-    val tyreId: Int? = null,
+    val typeId: Int? = null,
 )
 
 @Serializable

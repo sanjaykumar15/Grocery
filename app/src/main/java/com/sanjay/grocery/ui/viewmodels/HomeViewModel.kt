@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanjay.grocery.helper.RealmHelper
 import com.sanjay.grocery.network.ApiService
+import com.sanjay.grocery.ui.BottomBarItem
 import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.states.HomeScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,9 +26,15 @@ class HomeViewModel @Inject constructor(
 
     fun eventHandler(event: HomeScreenEvents) {
         when (event) {
-            is HomeScreenEvents.OnRefresh -> {
+            is HomeScreenEvents.OnInitRefresh -> {
+                if (event.isCart) {
+                    state = state.copy(
+                        selectedScreen = BottomBarItem.Cart,
+                        selectedTypeId = event.typeId
+                    )
+                }
                 val categories = realmHelper.getCategoryList()
-                if (event.refresh || categories.isEmpty()) {
+                if (categories.isEmpty()) {
                     getCategories()
                 } else {
                     state = state.copy(
@@ -38,6 +45,10 @@ class HomeViewModel @Inject constructor(
                         isInit = false
                     )
                 }
+            }
+
+            is HomeScreenEvents.OnRefresh -> {
+                getCategories()
             }
 
             is HomeScreenEvents.OnBottomItemClick -> {

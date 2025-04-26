@@ -107,7 +107,7 @@ fun CategoryScreenView(
             isRefreshing = isRefreshing,
             modifier = Modifier.fillMaxSize(),
             onRefresh = {
-                onEvent(HomeScreenEvents.OnRefresh(true))
+                onEvent(HomeScreenEvents.OnRefresh)
             }
         ) {
             LazyVerticalGrid(
