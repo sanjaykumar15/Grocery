@@ -167,11 +167,16 @@ fun CategoryItemsScreen(
                             ) { index, item ->
                                 ListItemView(
                                     item = item,
-                                    onClick = {
-                                        if (it.isNullOrEmpty()) {
+                                    onClick = { id, name ->
+                                        if (id == null || name.isNullOrEmpty()) {
                                             onEvent(CategoryItemsEvents.ShowToast("Failed to load item details"))
                                         } else {
-                                            onEvent(CategoryItemsEvents.OnCategoryItemClicked(it))
+                                            onEvent(
+                                                CategoryItemsEvents.OnCategoryItemClicked(
+                                                    typeId = id,
+                                                    typeName = name
+                                                )
+                                            )
                                         }
                                     }
                                 )
@@ -187,7 +192,7 @@ fun CategoryItemsScreen(
 @Composable
 private fun ListItemView(
     item: CategoryItems,
-    onClick: (typeId: String?) -> Unit,
+    onClick: (typeId: Int?, typeName: String?) -> Unit,
 ) {
     val priceStr = remember(item) {
         buildAnnotatedString {
@@ -205,7 +210,7 @@ private fun ListItemView(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable {
-                onClick(item.typeName)
+                onClick(item.typeID, item.typeName)
             }
     ) {
         Row(

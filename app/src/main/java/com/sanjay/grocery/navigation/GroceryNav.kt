@@ -8,12 +8,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.sanjay.grocery.ui.events.CategoryItemsEvents
 import com.sanjay.grocery.ui.events.HomeScreenEvents
+import com.sanjay.grocery.ui.events.ItemDetailsEvents
 import com.sanjay.grocery.ui.events.MainScreenEvents
 import com.sanjay.grocery.ui.screens.CategoryItemsScreen
 import com.sanjay.grocery.ui.screens.HomeScreen
+import com.sanjay.grocery.ui.screens.ItemDetailsScreen
 import com.sanjay.grocery.ui.screens.MainScreen
 import com.sanjay.grocery.ui.viewmodels.CategoryItemsVM
 import com.sanjay.grocery.ui.viewmodels.HomeViewModel
+import com.sanjay.grocery.ui.viewmodels.ItemDetailsVM
 
 @Composable
 fun GroceryNav(
@@ -31,7 +34,7 @@ fun GroceryNav(
                 onEvent = { event ->
                     when (event) {
                         is MainScreenEvents.OnOrderNow -> {
-                            navController.navigate(HomeScreen)
+                            navController.navigate(HomeScreenNav)
                         }
 
                         is MainScreenEvents.OnDismiss -> {
@@ -42,10 +45,11 @@ fun GroceryNav(
             )
         }
 
-        composable<HomeScreen> {
+        composable<HomeScreenNav> {
             val viewModel = hiltViewModel<HomeViewModel>()
             HomeScreen(
                 state = viewModel.state,
+                navItem = it.toRoute<HomeScreenNav>(),
                 onEvent = { event ->
                     when (event) {
                         is HomeScreenEvents.OnBackPressed -> {
@@ -89,6 +93,47 @@ fun GroceryNav(
                         is CategoryItemsEvents.ShowToast -> {
                             showToast(event.msg)
                             viewModel.eventHandler(event)
+                        }
+
+                        is CategoryItemsEvents.OnCategoryItemClicked -> {
+                            navController.navigate(
+                                ItemDetailsNav(
+                                    tyreId = event.typeId,
+                                    type = event.typeName
+                                )
+                            )
+                        }
+
+                        else -> {
+                            viewModel.eventHandler(event)
+                        }
+                    }
+                }
+            )
+        }
+        composable<ItemDetailsNav> {
+            val viewModel = hiltViewModel<ItemDetailsVM>()
+            ItemDetailsScreen(
+                state = viewModel.state,
+                navItem = it.toRoute<ItemDetailsNav>(),
+                onEvent = { event ->
+                    when (event) {
+                        is ItemDetailsEvents.OnBackPressed -> {
+                            navController.navigateUp()
+                        }
+
+                        is ItemDetailsEvents.ShowToast -> {
+                            showToast(event.msg)
+                            viewModel.eventHandler(event)
+                        }
+
+                        is ItemDetailsEvents.OnAddToCart -> {
+                            navController.navigate(
+                                HomeScreenNav(
+                                    isCart = true,
+                                    tyreId = event.tyreId
+                                )
+                            )
                         }
 
                         else -> {

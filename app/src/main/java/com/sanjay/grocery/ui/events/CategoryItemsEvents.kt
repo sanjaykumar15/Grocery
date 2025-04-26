@@ -12,5 +12,8 @@ sealed class CategoryItemsEvents {
 
     data class ShowToast(val msg: String) : CategoryItemsEvents()
     data class OnSearch(val query: String) : CategoryItemsEvents()
-    data class OnCategoryItemClicked(val tyreName: String) : CategoryItemsEvents()
+    data class OnCategoryItemClicked(
+        val typeId: Int,
+        val typeName: String,
+    ) : CategoryItemsEvents()
 }

@@ -11,4 +11,5 @@ data class CategoryItems(
     val sliderImages: List<String> = emptyList(),
     val pricePerPiece: Float? = null,
     val weightPerPiece: Int? = null,
+    val isFav: Boolean = false,
 )

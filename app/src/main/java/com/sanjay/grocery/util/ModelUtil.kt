@@ -60,4 +60,17 @@ object ModelUtil {
         }
     }
 
+    fun RCategoryItems.toCategoryItem(): CategoryItems {
+        return CategoryItems(
+            typeID = this.typeID,
+            typeName = this.typeName,
+            description = this.description,
+            pricePerPiece = this.pricePerPiece,
+            thumbnailImage = this.thumbnailImage,
+            weightPerPiece = this.weightPerPiece,
+            sliderImages = this.sliderImages?.toMutableList() ?: emptyList(),
+            isFav = this.isFav
+        )
+    }
+
 }

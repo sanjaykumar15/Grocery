@@ -11,4 +11,5 @@ open class RCategoryItems : RealmObject() {
     var sliderImages: RealmList<String>? = null
     var pricePerPiece: Float? = null
     var weightPerPiece: Int? = null
+    var isFav: Boolean = false
 }

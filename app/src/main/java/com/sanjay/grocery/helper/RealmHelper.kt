@@ -2,11 +2,13 @@ package com.sanjay.grocery.helper
 
 import android.util.Log
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_ITEM_TYPE_ID
+import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_ITEM_TYPE_NAME
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_LIST_ITEM_ID
 import com.sanjay.grocery.models.CategoryItems
 import com.sanjay.grocery.models.CategoryListItem
 import com.sanjay.grocery.models.RCategoryItems
 import com.sanjay.grocery.models.RCategoryList
+import com.sanjay.grocery.util.ModelUtil.toCategoryItem
 import com.sanjay.grocery.util.ModelUtil.toCategoryList
 import com.sanjay.grocery.util.ModelUtil.toCategoryThumbnail
 import com.sanjay.grocery.util.ModelUtil.toRCategoryItems
@@ -105,5 +107,36 @@ class RealmHelper @Inject constructor(
     override fun close() {
         Log.e(tag, "RealmClose")
         realm.close()
+    }
+
+    fun getCategoryItem(typeId: Int, typeName: String): CategoryItems? {
+        try {
+            val item = realm.where(RCategoryItems::class.java)
+                .equalTo(CATEGORY_ITEM_TYPE_ID, typeId)
+                .and()
+                .equalTo(CATEGORY_ITEM_TYPE_NAME, typeName)
+                .findFirst()
+            return item?.toCategoryItem()
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+        return null
+    }
+
+    suspend fun updateCategoryItem(typeId: Int?, typeName: String?) {
+        try {
+            withContext(singleThreadDispatcher) {
+                runCloseableTransaction { transactionRealm ->
+                    val item = transactionRealm.where(RCategoryItems::class.java)
+                        .equalTo(CATEGORY_ITEM_TYPE_ID, typeId)
+                        .and()
+                        .equalTo(CATEGORY_ITEM_TYPE_NAME, typeName)
+                        .findFirst()
+                    item?.isFav = !item.isFav
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
     }
 }

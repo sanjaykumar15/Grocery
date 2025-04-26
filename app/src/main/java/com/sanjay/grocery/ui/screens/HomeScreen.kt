@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sanjay.grocery.navigation.HomeScreenNav
 import com.sanjay.grocery.ui.BottomBarItem
 import com.sanjay.grocery.ui.components.ErrorView
 import com.sanjay.grocery.ui.components.TopBarComp
@@ -32,6 +33,7 @@ import com.sanjay.grocery.ui.theme.LightGrey
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
+    navItem: HomeScreenNav,
     onEvent: (HomeScreenEvents) -> Unit,
 ) {
     if (state.isInit) {
@@ -128,6 +130,7 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         state = HomeScreenState(),
+        navItem = HomeScreenNav(),
         onEvent = {}
     )
 }
