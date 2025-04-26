@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Grocery</string>
+    <string name="back">Back</string>
+    <string name="background_image">Background Image</string>
+    <string name="box_image">Box Image</string>
+    <string name="non_contact_deliveries">Non-Contact Deliveries</string>
+    <string name="main_description">When placing an order, select the option “Contactless delivery” and the courier will leave your order at the door.</string>
+    <string name="order_now">ORDER NOW</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="categories">Categories</string>
+    <string name="clear">Clear</string>
+    <string name="search">Search</string>
+    <string name="retry">Retry</string>
+    <string name="category_image">Category Image</string>
 </resources>
