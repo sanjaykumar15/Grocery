@@ -29,7 +29,7 @@ fun ErrorView(
 ) {
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .background(Color.Transparent)
             .padding(15.dp)
     ) {
         ErrorText(
