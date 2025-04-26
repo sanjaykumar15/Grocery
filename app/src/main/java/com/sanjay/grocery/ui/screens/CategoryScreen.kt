@@ -18,9 +18,11 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,10 +52,12 @@ import com.sanjay.grocery.ui.theme.TextDark
 import com.sanjay.grocery.ui.theme.TextSecondary
 import com.sanjay.grocery.ui.theme.White
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreenView(
     listItems: List<CategoryListItem>,
     onEvent: (HomeScreenEvents) -> Unit,
+    isRefreshing: Boolean = false,
 ) {
     Column(
         modifier = Modifier
@@ -100,24 +104,32 @@ fun CategoryScreenView(
             )
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalArrangement = Arrangement.spacedBy(15.dp)
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            modifier = Modifier.fillMaxSize(),
+            onRefresh = {
+                onEvent(HomeScreenEvents.OnRefresh(true))
+            }
         ) {
-            itemsIndexed(listItems) { index, item ->
-                CategoryItem(
-                    item = item,
-                    onClick = {
-                        if (it.isNullOrEmpty()) {
-                            onEvent(HomeScreenEvents.ShowToast("Unable to view items"))
-                        } else {
-                            onEvent(HomeScreenEvents.OnCategorySelected(it))
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                itemsIndexed(listItems) { index, item ->
+                    CategoryItem(
+                        item = item,
+                        onClick = {
+                            if (it.isNullOrEmpty()) {
+                                onEvent(HomeScreenEvents.ShowToast("Unable to view items"))
+                            } else {
+                                onEvent(HomeScreenEvents.OnCategorySelected(it))
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
