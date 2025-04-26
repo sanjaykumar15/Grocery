@@ -5,7 +5,8 @@ import com.sanjay.grocery.models.PaymentData
 import com.sanjay.grocery.ui.BottomBarItem
 
 data class HomeScreenState(
-    var isInit: Boolean = true,
+    val isInit: Boolean = true,
+    val isCartInit: Boolean = true,
     val isLoading: Boolean = false,
     val error: String = "",
     val showErrorView: Boolean = false,

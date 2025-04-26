@@ -83,7 +83,8 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is CartEvents.OnInitRefresh -> {
                 state = state.copy(
-                    paymentData = realmHelper.getPaymentData()
+                    paymentData = realmHelper.getPaymentData(),
+                    isCartInit = false
                 )
             }
 

@@ -128,6 +128,8 @@ fun HomeScreen(
                         isRefreshing = state.isLoading
                     )
                 } else if (state.selectedScreen == BottomBarItem.Cart) {
+                    if (state.isCartInit)
+                        onCartEvent(CartEvents.OnInitRefresh)
                     CartScreen(
                         paymentData = state.paymentData,
                         onEvent = onCartEvent
