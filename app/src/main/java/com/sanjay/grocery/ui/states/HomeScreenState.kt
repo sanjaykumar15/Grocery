@@ -1,6 +1,7 @@
 package com.sanjay.grocery.ui.states
 
 import com.sanjay.grocery.models.CategoryListItem
+import com.sanjay.grocery.models.PaymentData
 import com.sanjay.grocery.ui.BottomBarItem
 
 data class HomeScreenState(
@@ -17,4 +18,6 @@ data class HomeScreenState(
     ),
     val selectedScreen: BottomBarItem = BottomBarItem.Home,
     val selectedTypeId: Int? = null,
+    val selectedTyreName: String? = null,
+    val paymentData: PaymentData = PaymentData(),
 )

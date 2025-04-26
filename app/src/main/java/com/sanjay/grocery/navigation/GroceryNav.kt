@@ -6,14 +6,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.sanjay.grocery.core.Constants
+import com.sanjay.grocery.ui.events.CardDetailsEvents
+import com.sanjay.grocery.ui.events.CartEvents
 import com.sanjay.grocery.ui.events.CategoryItemsEvents
 import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.events.ItemDetailsEvents
 import com.sanjay.grocery.ui.events.MainScreenEvents
+import com.sanjay.grocery.ui.screens.CardDetailsScreen
 import com.sanjay.grocery.ui.screens.CategoryItemsScreen
 import com.sanjay.grocery.ui.screens.HomeScreen
 import com.sanjay.grocery.ui.screens.ItemDetailsScreen
 import com.sanjay.grocery.ui.screens.MainScreen
+import com.sanjay.grocery.ui.viewmodels.CardDetailsVM
 import com.sanjay.grocery.ui.viewmodels.CategoryItemsVM
 import com.sanjay.grocery.ui.viewmodels.HomeViewModel
 import com.sanjay.grocery.ui.viewmodels.ItemDetailsVM
@@ -75,6 +80,37 @@ fun GroceryNav(
                             viewModel.eventHandler(event)
                         }
                     }
+                },
+                onCartEvent = { event ->
+                    when (event) {
+                        is CartEvents.OnPaymentInit -> {
+                            navController.navigate(
+                                CardDetailsNav(
+                                    typeId = viewModel.state.selectedTypeId,
+                                    typeName = viewModel.state.selectedTyreName,
+                                    cardNumber = viewModel.state.paymentData.cardNumber
+                                )
+                            )
+                        }
+
+                        is CartEvents.OnChangeClicked -> {
+                            if (event.changeFor == Constants.CHANGE_FOR_CARD) {
+                                navController.navigate(
+                                    CardDetailsNav(
+                                        typeId = viewModel.state.selectedTypeId,
+                                        typeName = viewModel.state.selectedTyreName,
+                                        cardNumber = viewModel.state.paymentData.cardNumber
+                                    )
+                                )
+                            } else {
+                                viewModel.cartEventHandler(event)
+                            }
+                        }
+
+                        else -> {
+                            viewModel.cartEventHandler(event)
+                        }
+                    }
                 }
             )
         }
@@ -132,7 +168,8 @@ fun GroceryNav(
                             navController.navigate(
                                 HomeScreenNav(
                                     isCart = true,
-                                    typeId = event.typeId
+                                    typeId = event.typeId,
+                                    typeName = event.typeName
                                 )
                             )
                         }
@@ -143,6 +180,26 @@ fun GroceryNav(
                     }
                 }
             )
+        }
+
+        composable<CardDetailsNav> {
+            val viewModel = hiltViewModel<CardDetailsVM>()
+            CardDetailsScreen(
+                state = viewModel.state,
+                navItem = it.toRoute<CardDetailsNav>(),
+                onEvent = { event ->
+                    when (event) {
+                        is CardDetailsEvents.OnBackPressed -> {
+                            navController.navigateUp()
+                        }
+
+                        else -> {
+                            viewModel.eventHandler(event)
+                        }
+                    }
+                }
+            )
+
         }
     }
 }

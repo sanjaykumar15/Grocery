@@ -1,16 +1,20 @@
 package com.sanjay.grocery.helper
 
 import android.util.Log
+import com.sanjay.grocery.core.Constants.RealmCons.CARD_NUMBER
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_ITEM_TYPE_ID
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_ITEM_TYPE_NAME
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_LIST_ITEM_ID
 import com.sanjay.grocery.models.CategoryItems
 import com.sanjay.grocery.models.CategoryListItem
+import com.sanjay.grocery.models.PaymentData
 import com.sanjay.grocery.models.RCategoryItems
 import com.sanjay.grocery.models.RCategoryList
+import com.sanjay.grocery.models.RPaymentData
 import com.sanjay.grocery.util.ModelUtil.toCategoryItem
 import com.sanjay.grocery.util.ModelUtil.toCategoryList
 import com.sanjay.grocery.util.ModelUtil.toCategoryThumbnail
+import com.sanjay.grocery.util.ModelUtil.toPaymentData
 import com.sanjay.grocery.util.ModelUtil.toRCategoryItems
 import com.sanjay.grocery.util.ModelUtil.toRCategoryList
 import io.realm.Realm
@@ -138,5 +142,28 @@ class RealmHelper @Inject constructor(
         } catch (e: Exception) {
             Log.e(tag, "Error", e)
         }
+    }
+
+    fun getPaymentData(): PaymentData {
+        try {
+            val item = realm.where(RPaymentData::class.java)
+                .findFirst()
+            return item.toPaymentData()
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+        return PaymentData()
+    }
+
+    fun getPaymentDataByCardNo(cardNo: String?): PaymentData {
+        try {
+            val item = realm.where(RPaymentData::class.java)
+                .equalTo(CARD_NUMBER, cardNo)
+                .findFirst()
+            return item.toPaymentData()
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+        return PaymentData()
     }
 }

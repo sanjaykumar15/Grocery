@@ -2,8 +2,10 @@ package com.sanjay.grocery.util
 
 import com.sanjay.grocery.models.CategoryItems
 import com.sanjay.grocery.models.CategoryListItem
+import com.sanjay.grocery.models.PaymentData
 import com.sanjay.grocery.models.RCategoryItems
 import com.sanjay.grocery.models.RCategoryList
+import com.sanjay.grocery.models.RPaymentData
 import io.realm.RealmList
 import io.realm.RealmResults
 
@@ -70,6 +72,19 @@ object ModelUtil {
             weightPerPiece = this.weightPerPiece,
             sliderImages = this.sliderImages?.toMutableList() ?: emptyList(),
             isFav = this.isFav
+        )
+    }
+
+    fun RPaymentData?.toPaymentData(): PaymentData {
+        if (this == null)
+            return PaymentData()
+        return PaymentData(
+            name = this.name ?: "",
+            cardNumber = this.cardNumber ?: "",
+            address = this.address ?: "",
+            expiryDate = this.expiryDate ?: "",
+            cvv = this.cvv ?: "",
+            deliveryMethod = this.deliveryMethod ?: ""
         )
     }
 

@@ -10,6 +10,7 @@ sealed class HomeScreenEvents {
     data class OnInitRefresh(
         val isCart: Boolean,
         val typeId: Int?,
+        val typeName: String?,
     ) : HomeScreenEvents()
 
     data class OnBottomItemClick(val item: BottomBarItem) : HomeScreenEvents()

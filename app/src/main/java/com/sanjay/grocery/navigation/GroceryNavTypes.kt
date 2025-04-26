@@ -9,6 +9,7 @@ data object MainScreen
 data class HomeScreenNav(
     val isCart: Boolean = false,
     val typeId: Int? = null,
+    val typeName: String? = null,
 )
 
 @Serializable
@@ -22,4 +23,11 @@ data class CategoryItemsNav(
 data class ItemDetailsNav(
     val type: String,
     val typeId: Int,
+)
+
+@Serializable
+data class CardDetailsNav(
+    val typeId: Int?,
+    val typeName: String?,
+    val cardNumber: String?,
 )

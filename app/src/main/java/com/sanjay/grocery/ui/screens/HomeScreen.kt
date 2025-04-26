@@ -25,6 +25,7 @@ import com.sanjay.grocery.navigation.HomeScreenNav
 import com.sanjay.grocery.ui.BottomBarItem
 import com.sanjay.grocery.ui.components.ErrorView
 import com.sanjay.grocery.ui.components.TopBarComp
+import com.sanjay.grocery.ui.events.CartEvents
 import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.states.HomeScreenState
 import com.sanjay.grocery.ui.theme.Background
@@ -35,12 +36,14 @@ fun HomeScreen(
     state: HomeScreenState,
     navItem: HomeScreenNav,
     onEvent: (HomeScreenEvents) -> Unit,
+    onCartEvent: (CartEvents) -> Unit,
 ) {
     if (state.isInit) {
         onEvent(
             HomeScreenEvents.OnInitRefresh(
                 isCart = navItem.isCart,
-                typeId = navItem.typeId
+                typeId = navItem.typeId,
+                typeName = navItem.typeName
             )
         )
     }
@@ -124,6 +127,11 @@ fun HomeScreen(
                         onEvent = onEvent,
                         isRefreshing = state.isLoading
                     )
+                } else if (state.selectedScreen == BottomBarItem.Cart) {
+                    CartScreen(
+                        paymentData = state.paymentData,
+                        onEvent = onCartEvent
+                    )
                 }
             }
         }
@@ -136,6 +144,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         state = HomeScreenState(),
         navItem = HomeScreenNav(),
-        onEvent = {}
+        onEvent = {},
+        onCartEvent = {}
     )
 }

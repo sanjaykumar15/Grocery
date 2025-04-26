@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sanjay.grocery.core.Constants
 import com.sanjay.grocery.helper.RealmHelper
 import com.sanjay.grocery.network.ApiService
 import com.sanjay.grocery.ui.BottomBarItem
+import com.sanjay.grocery.ui.events.CartEvents
 import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.states.HomeScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,8 @@ class HomeViewModel @Inject constructor(
                 if (event.isCart) {
                     state = state.copy(
                         selectedScreen = BottomBarItem.Cart,
-                        selectedTypeId = event.typeId
+                        selectedTypeId = event.typeId,
+                        selectedTyreName = event.typeName
                     )
                 }
                 val categories = realmHelper.getCategoryList()
@@ -70,6 +73,38 @@ class HomeViewModel @Inject constructor(
                 } else {
                     state.copy(searchList = emptyList())
                 }
+            }
+
+            else -> {}
+        }
+    }
+
+    fun cartEventHandler(event: CartEvents) {
+        when (event) {
+            is CartEvents.OnInitRefresh -> {
+                state = state.copy(
+                    paymentData = realmHelper.getPaymentData()
+                )
+            }
+
+            is CartEvents.OnChangeClicked -> {
+                when (event.changeFor) {
+                    Constants.CHANGE_FOR_ADDRESS -> {
+
+                    }
+
+                    Constants.CHANGE_FOR_DELIVERY -> {
+
+                    }
+                }
+            }
+
+            is CartEvents.OnDeliveryOptionClicked -> {
+                state = state.copy(
+                    paymentData = state.paymentData.copy(
+                        deliveryMethod = event.option
+                    )
+                )
             }
 
             else -> {}

@@ -15,4 +15,13 @@
     <string name="favorite">Favorite</string>
     <string name="unfavorite">Unfavorite</string>
     <string name="add_to_cart">ADD TO CART</string>
+    <string name="change">CHANGE</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="delivery_option">Delivery Options</string>
+    <string name="delivery_by_myself">I’ll pick it up Myself</string>
+    <string name="delivery_by_courier">By Courier</string>
+    <string name="delivery_by_drone">By Drone</string>
+    <string name="selected">Selected</string>
+    <string name="credit_debit_card">Credit / Debit card</string>
 </resources>
