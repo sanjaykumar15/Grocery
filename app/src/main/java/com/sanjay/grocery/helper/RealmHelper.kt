@@ -1,10 +1,15 @@
 package com.sanjay.grocery.helper
 
 import android.util.Log
+import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_ITEM_TYPE_ID
 import com.sanjay.grocery.core.Constants.RealmCons.CATEGORY_LIST_ITEM_ID
+import com.sanjay.grocery.models.CategoryItems
 import com.sanjay.grocery.models.CategoryListItem
+import com.sanjay.grocery.models.RCategoryItems
 import com.sanjay.grocery.models.RCategoryList
 import com.sanjay.grocery.util.ModelUtil.toCategoryList
+import com.sanjay.grocery.util.ModelUtil.toCategoryThumbnail
+import com.sanjay.grocery.util.ModelUtil.toRCategoryItems
 import com.sanjay.grocery.util.ModelUtil.toRCategoryList
 import io.realm.Realm
 import io.realm.kotlin.executeTransactionAwait
@@ -52,10 +57,45 @@ class RealmHelper @Inject constructor(
         }
     }
 
+    suspend fun saveCategoryItems(categoryItems: List<CategoryItems>) {
+        try {
+            withContext(singleThreadDispatcher) {
+                runCloseableTransaction { transactionRealm ->
+                    transactionRealm.where(RCategoryItems::class.java)
+                        .findAll()
+                        .deleteAllFromRealm()
+                }
+            }
+            withContext(singleThreadDispatcher) {
+                runCloseableTransaction { transactionRealm ->
+                    transactionRealm.insertOrUpdate(categoryItems.toRCategoryItems())
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+    }
+
     fun getCategoryList(): List<CategoryListItem> {
         try {
-            val realm = Realm.getInstance(realmConfiguration)
-            return realm.where(RCategoryList::class.java).findAll().toCategoryList()
+            Realm.getDefaultInstance().use { realm ->
+                return realm.where(RCategoryList::class.java).findAll().toCategoryList()
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+        return emptyList()
+    }
+
+    fun getCategoryThumbnailItems(typeId: Int?): List<CategoryItems> {
+        try {
+            Realm.getDefaultInstance().use { realm ->
+                val temp = realm.where(RCategoryItems::class.java)
+                    .equalTo(CATEGORY_ITEM_TYPE_ID, typeId)
+                    .findAll()
+                    .toCategoryThumbnail()
+                return temp
+            }
         } catch (e: Exception) {
             Log.e(tag, "Error", e)
         }

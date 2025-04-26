@@ -7,3 +7,10 @@ data object MainScreen
 
 @Serializable
 data object HomeScreen
+
+@Serializable
+data class CategoryItemsNav(
+    val type: String,
+    val title: String,
+    val tyreId: Int,
+)

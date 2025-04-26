@@ -14,6 +14,7 @@ val PrimaryClr = Color(0xFF7519EB)
 val SecondaryClr = Color(0xFFC7A3F4)
 val TertiaryClr = Color(0x80B588EE)
 val Background = Color(0xFFEEEEEE)
+val ItemBg = Color(0xFFE9E4E4)
 
 val LightGrey = Color(0xFFd2d2d2)
 val LightBg = Color(0xFFFAF8F8)

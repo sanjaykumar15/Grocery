@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CategoryListItem(
-    var categoryID: Int? = null,
-    var categoryType: String? = null,
-    var categoryName: String? = null,
-    var categoryImage: String? = null,
-    var totalItems: Int? = null,
+    val categoryID: Int? = null,
+    val categoryType: String? = null,
+    val categoryName: String? = null,
+    val categoryImage: String? = null,
+    val totalItems: Int? = null,
 )

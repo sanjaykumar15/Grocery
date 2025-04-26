@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -165,6 +166,32 @@ fun Text18(
 @Composable
 fun CustomText(
     text: String,
+    modifier: Modifier,
+    fontSize: TextUnit,
+    fontStyle: FontStyle = FontStyle.Normal,
+    fontWeight: FontWeight = FontWeight.Normal,
+    fontFamily: FontFamily = FontFamily.Default,
+    textAlign: TextAlign = TextAlign.Start,
+    textColor: Color = TextDark,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = TextStyle(
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            fontStyle = fontStyle,
+            fontFamily = fontFamily
+        ),
+        color = textColor,
+        textAlign = textAlign
+    )
+}
+
+
+@Composable
+fun CustomAnnotatedText(
+    text: AnnotatedString,
     modifier: Modifier,
     fontSize: TextUnit,
     fontStyle: FontStyle = FontStyle.Normal,

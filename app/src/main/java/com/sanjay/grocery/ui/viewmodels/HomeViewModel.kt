@@ -26,19 +26,17 @@ class HomeViewModel @Inject constructor(
     fun eventHandler(event: HomeScreenEvents) {
         when (event) {
             is HomeScreenEvents.OnRefresh -> {
-                if (event.refresh) {
+                val categories = realmHelper.getCategoryList()
+                if (event.refresh || categories.isEmpty()) {
                     getCategories()
                 } else {
-                    val categories = realmHelper.getCategoryList()
-                    if (categories.isNotEmpty()) {
-                        state = state.copy(
-                            categoryList = categories,
-                            isLoading = false,
-                            showErrorView = false,
-                            error = "",
-                            isInit = false
-                        )
-                    }
+                    state = state.copy(
+                        categoryList = categories,
+                        isLoading = false,
+                        showErrorView = false,
+                        error = "",
+                        isInit = false
+                    )
                 }
             }
 

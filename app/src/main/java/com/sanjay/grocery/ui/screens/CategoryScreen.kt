@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,10 +121,16 @@ fun CategoryScreenView(
                     CategoryItem(
                         item = item,
                         onClick = {
-                            if (it.isNullOrEmpty()) {
+                            if (it.categoryType.isNullOrEmpty() || it.categoryID == null) {
                                 onEvent(HomeScreenEvents.ShowToast("Unable to view items"))
                             } else {
-                                onEvent(HomeScreenEvents.OnCategorySelected(it))
+                                onEvent(
+                                    HomeScreenEvents.OnCategorySelected(
+                                        type = it.categoryType,
+                                        name = it.categoryName?:"",
+                                        typeId = it.categoryID
+                                    )
+                                )
                             }
                         }
                     )
@@ -138,7 +143,7 @@ fun CategoryScreenView(
 @Composable
 private fun CategoryItem(
     item: CategoryListItem,
-    onClick: (String?) -> Unit,
+    onClick: (CategoryListItem) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -147,7 +152,7 @@ private fun CategoryItem(
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = White)
             .clickable(enabled = true) {
-                onClick(item.categoryType)
+                onClick(item)
             },
     ) {
         Column(
@@ -157,7 +162,7 @@ private fun CategoryItem(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(item.categoryImage)
                     .crossfade(true)
-                    .error(R.drawable.main_bg)
+                    .error(R.drawable.ic_image)
                     .build(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -194,18 +199,18 @@ private fun CategoryScreenViewPreview() {
     ) {
         CategoryScreenView(
             listItems = listOf(
-                CategoryListItem().apply {
-                    categoryID = 1
-                    categoryName = "Vegetables"
-                    categoryType = "Vegetables"
+                CategoryListItem(
+                    categoryID = 1,
+                    categoryName = "Vegetables",
+                    categoryType = "Vegetables",
                     totalItems = 10
-                },
-                CategoryListItem().apply {
-                    categoryID = 2
-                    categoryName = "Fruits"
-                    categoryType = "Fruits"
-                    totalItems = 15
-                }
+                ),
+                CategoryListItem(
+                    categoryID = 2,
+                    categoryName = "Fruits",
+                    categoryType = "Fruits",
+                    totalItems = 15,
+                )
             ),
             onEvent = {}
         )

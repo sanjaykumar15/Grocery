@@ -5,6 +5,7 @@ import com.sanjay.grocery.core.ApiResults
 import com.sanjay.grocery.core.Constants
 import com.sanjay.grocery.core.Constants.HttpConst.GET
 import com.sanjay.grocery.helper.RealmHelper
+import com.sanjay.grocery.models.CategoryItems
 import com.sanjay.grocery.models.CategoryListItem
 import com.sanjay.grocery.util.exceptionUtil
 import kotlinx.serialization.json.Json
@@ -38,8 +39,33 @@ class ApiService @Inject constructor(
                 return ApiResults(success = true)
             }
         } catch (e: Exception) {
-            return ApiResults(success = false, error = exceptionUtil(e))
             Log.e(tag, "Error", e)
+            return ApiResults(success = false, error = exceptionUtil(e))
+        }
+    }
+
+    suspend fun getCategoryItems(type: String): ApiResults {
+        val con = apiClient.getConnection(
+            url = Constants.HttpConst.CATEGORY_ITEMS + type,
+            method = GET
+        )
+        try {
+            val reader = InputStreamReader(con.inputStream)
+            reader.use { input ->
+                val res = StringBuilder()
+                val bufferedReader = BufferedReader(input)
+                for (line in bufferedReader.readLines()) {
+                    res.append(line)
+                }
+                con.disconnect()
+                Log.d(tag, "Response: $res")
+                val responseList = Json.decodeFromString<List<CategoryItems>>(res.toString())
+                realmHelper.saveCategoryItems(responseList)
+                return ApiResults(success = true)
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+            return ApiResults(success = false, error = exceptionUtil(e))
         }
     }
 
