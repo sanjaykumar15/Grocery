@@ -4,6 +4,7 @@ import com.sanjay.grocery.models.CategoryListItem
 import com.sanjay.grocery.ui.BottomBarItem
 
 data class HomeScreenState(
+    var isInit: Boolean = true,
     val isLoading: Boolean = false,
     val error: String = "",
     val showErrorView: Boolean = false,

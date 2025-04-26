@@ -1,8 +1,6 @@
 package com.sanjay.grocery.ui.screens
 
-import android.widget.ImageButton
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,13 +28,16 @@ import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.states.HomeScreenState
 import com.sanjay.grocery.ui.theme.Background
 import com.sanjay.grocery.ui.theme.LightGrey
-import com.sanjay.grocery.ui.theme.White
 
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
     onEvent: (HomeScreenEvents) -> Unit,
 ) {
+    if (state.isInit) {
+        onEvent(HomeScreenEvents.OnRefresh(false))
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -46,7 +46,7 @@ fun HomeScreen(
             TopBarComp(
                 title = "",
                 onBackClick = {
-                    onEvent(HomeScreenEvents.OnRefresh)
+                    onEvent(HomeScreenEvents.OnBackPressed)
                 }
             )
         },
@@ -104,7 +104,7 @@ fun HomeScreen(
                 ErrorView(
                     errorMsg = state.error
                 ) {
-                    onEvent(HomeScreenEvents.OnRefresh)
+                    onEvent(HomeScreenEvents.OnRefresh(true))
                 }
             } else {
                 if (state.error.isNotEmpty()) {
@@ -114,7 +114,8 @@ fun HomeScreen(
                     CategoryScreenView(
                         listItems = if (state.searchList.isNotEmpty()) state.searchList
                         else state.categoryList,
-                        onEvent = onEvent
+                        onEvent = onEvent,
+                        isRefreshing = state.isLoading
                     )
                 }
             }

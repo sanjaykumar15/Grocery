@@ -3,6 +3,7 @@ package com.sanjay.grocery.di
 import android.app.Application
 import android.content.Context
 import com.sanjay.grocery.core.Constants
+import com.sanjay.grocery.network.ApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,7 +11,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.realm.Realm
 import io.realm.RealmConfiguration
-
 import javax.inject.Singleton
 
 @Module
@@ -36,4 +36,9 @@ object AppModule {
         return Realm.getDefaultInstance()
     }
 
+    @Singleton
+    @Provides
+    fun providesApiClient(): ApiClient {
+        return ApiClient()
+    }
 }
