@@ -166,4 +166,16 @@ class RealmHelper @Inject constructor(
         }
         return PaymentData()
     }
+
+    suspend fun saveCardDetails(data: RPaymentData) {
+        try {
+            withContext(singleThreadDispatcher) {
+                runCloseableTransaction { transactionRealm ->
+                    transactionRealm.insertOrUpdate(data)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Error", e)
+        }
+    }
 }

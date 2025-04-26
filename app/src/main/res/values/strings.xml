@@ -24,4 +24,9 @@
     <string name="delivery_by_drone">By Drone</string>
     <string name="selected">Selected</string>
     <string name="credit_debit_card">Credit / Debit card</string>
+    <string name="name_on_card">Name on Card</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvc">CVC</string>
+    <string name="use_this_card">USE THIS CARD</string>
 </resources>

@@ -53,6 +53,7 @@ fun TextFieldWithPlaceHolder(
     isError: Boolean = false,
     isOnlyDigits: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
+    maxLength: Int? = null,
 ) {
     val textValue = remember {
         mutableStateOf("")
@@ -75,16 +76,19 @@ fun TextFieldWithPlaceHolder(
         enabled = isEnabled,
         colors = colors,
         onValueChange = {
-            if (isOnlyDigits) {
-                if (it.isDigitsOnly()) {
+            val it = it.trim()
+            if (maxLength == null || it.length <= maxLength) {
+                if (isOnlyDigits) {
+                    if (it.isDigitsOnly()) {
+                        textValue.value = it
+                        hasValue.value = it.trim().isNotEmpty()
+                        onValueChange(it)
+                    }
+                } else {
                     textValue.value = it
                     hasValue.value = it.trim().isNotEmpty()
                     onValueChange(it)
                 }
-            } else {
-                textValue.value = it
-                hasValue.value = it.trim().isNotEmpty()
-                onValueChange(it)
             }
         },
         leadingIcon = leadingIcon,
