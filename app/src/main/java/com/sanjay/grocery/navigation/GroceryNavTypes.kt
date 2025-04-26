@@ -15,11 +15,11 @@ data class HomeScreenNav(
 data class CategoryItemsNav(
     val type: String,
     val title: String,
-    val tyreId: Int,
+    val typeId: Int,
 )
 
 @Serializable
 data class ItemDetailsNav(
     val type: String,
-    val tyreId: Int,
+    val typeId: Int,
 )

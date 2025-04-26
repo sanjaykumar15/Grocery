@@ -66,7 +66,7 @@ fun GroceryNav(
                                 CategoryItemsNav(
                                     type = event.type,
                                     title = event.name,
-                                    tyreId = event.typeId
+                                    typeId = event.typeId
                                 )
                             )
                         }
@@ -98,7 +98,7 @@ fun GroceryNav(
                         is CategoryItemsEvents.OnCategoryItemClicked -> {
                             navController.navigate(
                                 ItemDetailsNav(
-                                    tyreId = event.typeId,
+                                    typeId = event.typeId,
                                     type = event.typeName
                                 )
                             )
