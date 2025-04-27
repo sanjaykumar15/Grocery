@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
@@ -108,6 +109,70 @@ fun TextFieldWithPlaceHolder(
             }
         },
         isError = isError
+    )
+}
+
+@Composable
+fun TextFieldWithPlaceHolderWithValue(
+    placeholder: String,
+    modifier: Modifier,
+    keyboardType: KeyboardType,
+    imeAction: ImeAction,
+    isEnabled: Boolean = true,
+    autoCorrect: Boolean = true,
+    colors: TextFieldColors = TextFieldDefaults.colors(
+        focusedTextColor = TextDark,
+        disabledTextColor = TextDark,
+        focusedContainerColor = LightBg,
+        unfocusedContainerColor = LightBg,
+        disabledContainerColor = Color.LightGray,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
+        errorIndicatorColor = Color.Transparent,
+        errorContainerColor = LightBg,
+        focusedLeadingIconColor = PrimaryClr,
+        focusedTrailingIconColor = PrimaryClr,
+        focusedLabelColor = PrimaryClr,
+        cursorColor = PrimaryClr
+    ),
+    onValueChange: (String) -> Unit,
+    isError: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    value: String,
+) {
+    TextField(
+        placeholder = { DefaultText(text = placeholder) },
+        modifier = modifier,
+        value = value,
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            autoCorrectEnabled = autoCorrect,
+            keyboardType = keyboardType,
+            imeAction = imeAction
+        ),
+        enabled = isEnabled,
+        colors = colors,
+        onValueChange = {
+            onValueChange(it.trim())
+        },
+        leadingIcon = leadingIcon,
+        trailingIcon = {
+            if (value.trim().isNotEmpty()) {
+                IconButton(onClick = {
+                    onValueChange("")
+                }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_cancel),
+                        tint = Color.LightGray,
+                        contentDescription = stringResource(R.string.clear)
+                    )
+                }
+            }
+        },
+        isError = isError,
+        visualTransformation = visualTransformation
     )
 }
 

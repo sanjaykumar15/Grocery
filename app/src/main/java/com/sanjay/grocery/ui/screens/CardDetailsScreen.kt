@@ -27,10 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.sanjay.grocery.R
 import com.sanjay.grocery.navigation.CardDetailsNav
 import com.sanjay.grocery.ui.components.BorderView
@@ -38,7 +40,7 @@ import com.sanjay.grocery.ui.components.CustomText
 import com.sanjay.grocery.ui.components.DefaultText
 import com.sanjay.grocery.ui.components.Text12
 import com.sanjay.grocery.ui.components.Text18
-import com.sanjay.grocery.ui.components.TextFieldWithPlaceHolder
+import com.sanjay.grocery.ui.components.TextFieldWithPlaceHolderWithValue
 import com.sanjay.grocery.ui.components.TopBarComp
 import com.sanjay.grocery.ui.events.CardDetailsEvents
 import com.sanjay.grocery.ui.states.CardDetailsState
@@ -48,6 +50,9 @@ import com.sanjay.grocery.ui.theme.Gray
 import com.sanjay.grocery.ui.theme.Green
 import com.sanjay.grocery.ui.theme.TextDark
 import com.sanjay.grocery.ui.theme.White
+import com.sanjay.grocery.ui.util.FieldType
+import com.sanjay.grocery.ui.util.FormatterUtil
+import com.sanjay.grocery.ui.util.InputTransformation
 
 @Composable
 fun CardDetailsScreen(
@@ -114,7 +119,7 @@ fun CardDetailsScreen(
                         )
 
                         CustomText(
-                            text = state.cardNumber,
+                            text = FormatterUtil.cardNumFormat(state.cardNumber),
                             modifier = Modifier
                                 .align(Alignment.Center),
                             textAlign = TextAlign.Center,
@@ -131,13 +136,13 @@ fun CardDetailsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text18(
-                                text = state.cardHolderName,
+                                text = FormatterUtil.cardHolderFormat(state.cardHolderName),
                                 modifier = Modifier.wrapContentSize(),
                                 textColor = White
                             )
 
                             Text18(
-                                text = state.expiryDate,
+                                text = FormatterUtil.expireDateFormat(state.expiryDate),
                                 modifier = Modifier.wrapContentSize(),
                                 textColor = White
                             )
@@ -151,6 +156,7 @@ fun CardDetailsScreen(
                         hintText = stringResource(R.string.name_on_card),
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next,
+                        value = state.cardHolderName,
                         onValueChange = {
                             onEvent(
                                 CardDetailsEvents.OnCardHolderNameChange(
@@ -168,14 +174,17 @@ fun CardDetailsScreen(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next,
                         isOnlyNumber = true,
-                        maxLength = 16,
+                        value = state.cardNumber,
                         onValueChange = {
-                            onEvent(
-                                CardDetailsEvents.OnCardNoChange(
-                                    number = it
+                            if (it.length <= 16 && it.isDigitsOnly()) {
+                                onEvent(
+                                    CardDetailsEvents.OnCardNoChange(
+                                        number = if (it.length >= 16) it.substring(0..15) else it
+                                    )
                                 )
-                            )
-                        }
+                            }
+                        },
+                        visualTransformation = InputTransformation(FieldType.CARD_NUMBER)
                     )
                 }
 
@@ -191,14 +200,17 @@ fun CardDetailsScreen(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Next,
                             isOnlyNumber = true,
-                            maxLength = 5,
+                            value = state.expiryDate,
                             onValueChange = {
-                                onEvent(
-                                    CardDetailsEvents.OnExpiryDateChange(
-                                        date = it
+                                if (it.length <= 4 && it.isDigitsOnly()) {
+                                    onEvent(
+                                        CardDetailsEvents.OnExpiryDateChange(
+                                            date = if (it.length >= 4) it.substring(0..3) else it
+                                        )
                                     )
-                                )
-                            }
+                                }
+                            },
+                            visualTransformation = InputTransformation(FieldType.EXPIRE_DATE)
                         )
 
                         EditFieldView(
@@ -209,12 +221,15 @@ fun CardDetailsScreen(
                             isOnlyNumber = true,
                             showCvvHint = true,
                             maxLength = 3,
+                            value = state.cvv,
                             onValueChange = {
-                                onEvent(
-                                    CardDetailsEvents.OnCvvChange(
-                                        cvv = it
+                                if (it.length <= 3 && it.isDigitsOnly()) {
+                                    onEvent(
+                                        CardDetailsEvents.OnCvvChange(
+                                            cvv = it
+                                        )
                                     )
-                                )
+                                }
                             }
                         )
                     }
@@ -260,6 +275,8 @@ private fun EditFieldView(
     onValueChange: (String) -> Unit,
     showCvvHint: Boolean = false,
     maxLength: Int? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    value: String,
 ) {
     Column(
         modifier = modifier,
@@ -283,7 +300,7 @@ private fun EditFieldView(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextFieldWithPlaceHolder(
+                TextFieldWithPlaceHolderWithValue(
                     placeholder = hintText,
                     modifier = Modifier.weight(1f),
                     keyboardType = keyboardType,
@@ -297,8 +314,8 @@ private fun EditFieldView(
                         errorIndicatorColor = Color.Transparent
                     ),
                     onValueChange = onValueChange,
-                    isOnlyDigits = isOnlyNumber,
-                    maxLength = maxLength
+                    visualTransformation = visualTransformation,
+                    value = value
                 )
 
                 if (showCvvHint) {

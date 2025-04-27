@@ -40,6 +40,7 @@ import com.sanjay.grocery.ui.theme.Background
 import com.sanjay.grocery.ui.theme.PrimaryClr
 import com.sanjay.grocery.ui.theme.SecondaryClr
 import com.sanjay.grocery.ui.theme.White
+import com.sanjay.grocery.ui.util.FormatterUtil
 
 @Composable
 fun CartScreen(
@@ -68,7 +69,8 @@ fun CartScreen(
             Spacer(modifier = Modifier.height(15.dp))
 
             ContentView(
-                contentText = paymentData.cardNumber.ifEmpty { "No Card Data" },
+                contentText = FormatterUtil.cardNumFormat(paymentData.cardNumber)
+                    .ifEmpty { "No Card Data" },
                 imagePainter = painterResource(R.drawable.ic_card),
                 description = stringResource(R.string.payment_method),
                 onClick = {
