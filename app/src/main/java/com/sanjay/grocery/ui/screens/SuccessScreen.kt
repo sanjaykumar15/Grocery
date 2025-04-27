@@ -1,5 +1,6 @@
 package com.sanjay.grocery.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +41,10 @@ import com.sanjay.grocery.ui.theme.White
 fun SuccessScreen(
     onEvent: (SuccessScreenEvents) -> Unit,
 ) {
+    BackHandler {
+        onEvent(SuccessScreenEvents.NavToHome)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -101,7 +106,7 @@ fun SuccessScreen(
                         disabledContainerColor = Gray,
                     ),
                     onClick = {
-                        onEvent(SuccessScreenEvents.OrderMoreClicked)
+                        onEvent(SuccessScreenEvents.NavToHome)
                     }
                 ) {
                     DefaultText(
@@ -118,7 +123,7 @@ fun SuccessScreen(
                         disabledContainerColor = Gray,
                     ),
                     onClick = {
-                        onEvent(SuccessScreenEvents.OnBackPressed)
+                        onEvent(SuccessScreenEvents.NavToHome)
                     }
                 ) {
                     DefaultText(

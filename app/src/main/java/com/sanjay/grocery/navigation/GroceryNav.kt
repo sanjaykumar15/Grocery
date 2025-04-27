@@ -220,16 +220,12 @@ fun GroceryNav(
         composable<SuccessScreenNav> {
             SuccessScreen { event ->
                 when (event) {
-                    SuccessScreenEvents.OrderMoreClicked -> {
+                    SuccessScreenEvents.NavToHome -> {
                         navController.navigate(HomeScreenNav()) {
-                            popUpTo(SuccessScreenNav) {
+                            popUpTo(HomeScreenNav()) {
                                 inclusive = true
                             }
                         }
-                    }
-
-                    SuccessScreenEvents.OnBackPressed -> {
-                        navController.navigateUp()
                     }
                 }
             }
