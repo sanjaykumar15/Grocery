@@ -13,11 +13,13 @@ import com.sanjay.grocery.ui.events.CategoryItemsEvents
 import com.sanjay.grocery.ui.events.HomeScreenEvents
 import com.sanjay.grocery.ui.events.ItemDetailsEvents
 import com.sanjay.grocery.ui.events.MainScreenEvents
+import com.sanjay.grocery.ui.events.SuccessScreenEvents
 import com.sanjay.grocery.ui.screens.CardDetailsScreen
 import com.sanjay.grocery.ui.screens.CategoryItemsScreen
 import com.sanjay.grocery.ui.screens.HomeScreen
 import com.sanjay.grocery.ui.screens.ItemDetailsScreen
 import com.sanjay.grocery.ui.screens.MainScreen
+import com.sanjay.grocery.ui.screens.SuccessScreen
 import com.sanjay.grocery.ui.viewmodels.CardDetailsVM
 import com.sanjay.grocery.ui.viewmodels.CategoryItemsVM
 import com.sanjay.grocery.ui.viewmodels.HomeViewModel
@@ -201,6 +203,7 @@ fun GroceryNav(
                         is CardDetailsEvents.OnPaymentResult -> {
                             if (event.isSuccess) {
                                 showToast(event.msg)
+                                navController.navigate(SuccessScreenNav)
                             } else {
                                 viewModel.eventHandler(event)
                             }
@@ -212,7 +215,24 @@ fun GroceryNav(
                     }
                 }
             )
+        }
 
+        composable<SuccessScreenNav> {
+            SuccessScreen { event ->
+                when (event) {
+                    SuccessScreenEvents.OrderMoreClicked -> {
+                        navController.navigate(HomeScreenNav()) {
+                            popUpTo(SuccessScreenNav) {
+                                inclusive = true
+                            }
+                        }
+                    }
+
+                    SuccessScreenEvents.OnBackPressed -> {
+                        navController.navigateUp()
+                    }
+                }
+            }
         }
     }
 }

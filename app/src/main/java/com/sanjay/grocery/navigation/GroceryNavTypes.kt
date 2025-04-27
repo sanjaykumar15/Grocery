@@ -31,3 +31,6 @@ data class CardDetailsNav(
     val typeName: String?,
     val cardNumber: String?,
 )
+
+@Serializable
+data object SuccessScreenNav

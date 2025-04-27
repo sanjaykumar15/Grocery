@@ -5,8 +5,11 @@
     <string name="box_image">Box Image</string>
     <string name="non_contact_deliveries">Non-Contact Deliveries</string>
     <string name="main_description">When placing an order, select the option “Contactless delivery” and the courier will leave your order at the door.</string>
+    <string name="thank_you_message">Thank You For shopping with us</string>
     <string name="order_now">ORDER NOW</string>
+    <string name="order_more">ORDER MORE</string>
     <string name="dismiss">Dismiss</string>
+    <string name="close">CLOSE</string>
     <string name="categories">Categories</string>
     <string name="clear">Clear</string>
     <string name="search">Search</string>
