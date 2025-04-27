@@ -1,5 +1,8 @@
 package com.sanjay.grocery
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -17,9 +20,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
             GroceryTheme {
                 val navController = rememberNavController()
