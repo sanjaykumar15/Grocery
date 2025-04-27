@@ -18,6 +18,7 @@ object Constants {
 
         const val CATEGORY_LIST = "router/get/all/categories"
         const val CATEGORY_ITEMS = "router/get/category/"
+        const val START_PAYMENT = "start/payment"
     }
 
     const val CHANGE_FOR_CARD = "ChangeForCard"

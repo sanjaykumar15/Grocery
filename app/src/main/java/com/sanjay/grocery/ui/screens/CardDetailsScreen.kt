@@ -1,5 +1,6 @@
 package com.sanjay.grocery.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,10 +19,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,11 +36,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.sanjay.grocery.R
 import com.sanjay.grocery.navigation.CardDetailsNav
+import com.sanjay.grocery.ui.components.AlertDialog
 import com.sanjay.grocery.ui.components.BorderView
 import com.sanjay.grocery.ui.components.CustomText
 import com.sanjay.grocery.ui.components.DefaultText
+import com.sanjay.grocery.ui.components.ProgressDialog
 import com.sanjay.grocery.ui.components.Text12
 import com.sanjay.grocery.ui.components.Text18
 import com.sanjay.grocery.ui.components.TextFieldWithPlaceHolderWithValue
@@ -53,13 +61,22 @@ import com.sanjay.grocery.ui.theme.White
 import com.sanjay.grocery.ui.util.FieldType
 import com.sanjay.grocery.ui.util.FormatterUtil
 import com.sanjay.grocery.ui.util.InputTransformation
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.model.ConfirmPaymentIntentParams
+import com.stripe.android.model.PaymentMethodCreateParams
+import com.stripe.android.payments.paymentlauncher.PaymentResult
+import com.stripe.android.payments.paymentlauncher.rememberPaymentLauncher
+import com.stripe.android.paymentsheet.ExperimentalCustomerSessionApi
 
+@OptIn(ExperimentalCustomerSessionApi::class)
+@SuppressLint("RestrictedApi")
 @Composable
 fun CardDetailsScreen(
     state: CardDetailsState,
     navItem: CardDetailsNav,
     onEvent: (CardDetailsEvents) -> Unit,
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     if (state.isInit) {
         onEvent(
             CardDetailsEvents.OnInit(
@@ -68,6 +85,85 @@ fun CardDetailsScreen(
                 typeName = navItem.typeName
             )
         )
+    }
+
+    if (state.error.isNotEmpty() && !state.showAlert) {
+        onEvent(CardDetailsEvents.ShowToast(state.error))
+    }
+
+    if (state.isLoading) {
+        ProgressDialog(
+            message = "Initializing Payment Process"
+        )
+    }
+
+    if (state.showAlert) {
+        AlertDialog(
+            message = state.error,
+            negativeButtonText = "",
+            onDialogDismiss = {
+                onEvent(CardDetailsEvents.HideAlert)
+            },
+            onConfirm = {
+                onEvent(CardDetailsEvents.HideAlert)
+            }
+        )
+    }
+
+    if (state.isApiKeySuccess) {
+        PaymentConfiguration.init(
+            context = LocalContext.current,
+            publishableKey = state.paymentResponse!!.publishableKey
+        )
+        val launcher = rememberPaymentLauncher(
+            publishableKey = state.paymentResponse.publishableKey
+        ) { result ->
+            when (result) {
+                is PaymentResult.Canceled -> {
+                    onEvent(
+                        CardDetailsEvents.OnPaymentResult(
+                            isSuccess = false,
+                            msg = "Payment Canceled"
+                        )
+                    )
+                }
+
+                is PaymentResult.Failed -> {
+                    onEvent(
+                        CardDetailsEvents.OnPaymentResult(
+                            isSuccess = false,
+                            msg = "Payment Failed, ${result.throwable.message}"
+                        )
+                    )
+                }
+
+                is PaymentResult.Completed -> {
+                    onEvent(
+                        CardDetailsEvents.OnPaymentResult(
+                            isSuccess = true,
+                            msg = "Payment Completed"
+                        )
+                    )
+                }
+            }
+        }
+        LaunchedEffect(state.paymentResponse) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(
+                    paymentMethodCreateParams = PaymentMethodCreateParams.create(
+                        card = PaymentMethodCreateParams.Card(
+                            number = state.cardNumber,
+                            expiryMonth = state.expiryDate.substring(0, 2).toInt(),
+                            expiryYear = state.expiryDate.substring(2, 4).toInt(),
+                            cvc = state.cvv
+                        )
+                    ),
+                    clientSecret = state.paymentResponse.paymentIntent
+                ).let {
+                    launcher.confirm(it)
+                }
+            }
+        }
     }
 
     Scaffold(

@@ -176,6 +176,13 @@ class RealmHelper @Inject constructor(
         try {
             withContext(singleThreadDispatcher) {
                 runCloseableTransaction { transactionRealm ->
+                    transactionRealm.where(RPaymentData::class.java)
+                        .findAll()
+                        .deleteAllFromRealm()
+                }
+            }
+            withContext(singleThreadDispatcher) {
+                runCloseableTransaction { transactionRealm ->
                     transactionRealm.insertOrUpdate(data)
                 }
             }

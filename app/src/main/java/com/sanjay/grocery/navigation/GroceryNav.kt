@@ -99,7 +99,7 @@ fun GroceryNav(
                                     CardDetailsNav(
                                         typeId = viewModel.state.selectedTypeId,
                                         typeName = viewModel.state.selectedTyreName,
-                                        cardNumber = viewModel.state.paymentData.cardNumber
+                                        cardNumber = null
                                     )
                                 )
                             } else {
@@ -191,6 +191,19 @@ fun GroceryNav(
                     when (event) {
                         is CardDetailsEvents.OnBackPressed -> {
                             navController.navigateUp()
+                        }
+
+                        is CardDetailsEvents.ShowToast -> {
+                            showToast(event.msg)
+                            viewModel.eventHandler(event)
+                        }
+
+                        is CardDetailsEvents.OnPaymentResult -> {
+                            if (event.isSuccess) {
+                                showToast(event.msg)
+                            } else {
+                                viewModel.eventHandler(event)
+                            }
                         }
 
                         else -> {

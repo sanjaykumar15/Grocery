@@ -38,7 +38,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesApiClient(): ApiClient {
-        return ApiClient()
+    fun providesApiClient(context: Context): ApiClient {
+        return ApiClient(context)
     }
 }

@@ -3,6 +3,7 @@ package com.sanjay.grocery.ui.events
 sealed class CardDetailsEvents {
     data object OnBackPressed : CardDetailsEvents()
     data object Submit : CardDetailsEvents()
+    data object HideAlert : CardDetailsEvents()
 
     data class OnInit(
         val typeId: Int?,
@@ -24,5 +25,14 @@ sealed class CardDetailsEvents {
 
     data class OnCvvChange(
         val cvv: String,
+    ) : CardDetailsEvents()
+
+    data class ShowToast(
+        val msg: String,
+    ) : CardDetailsEvents()
+
+    data class OnPaymentResult(
+        val isSuccess: Boolean,
+        val msg: String,
     ) : CardDetailsEvents()
 }
