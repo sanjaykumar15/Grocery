@@ -70,7 +70,7 @@ fun CategoryItemsScreen(
             CategoryItemsEvents.OnInitRefresh(
                 type = navItem.type,
                 title = navItem.title,
-                tyreId = navItem.typeId
+                typeId = navItem.typeId
             )
         )
     }

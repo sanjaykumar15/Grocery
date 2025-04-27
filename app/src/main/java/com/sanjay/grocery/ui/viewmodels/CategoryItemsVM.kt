@@ -29,7 +29,7 @@ class CategoryItemsVM @Inject constructor(
             is CategoryItemsEvents.OnInitRefresh -> {
                 state = state.copy(
                     selectedType = event.type,
-                    selectedTypeID = event.tyreId,
+                    selectedTypeID = event.typeId,
                     title = event.title,
                     isInit = false
                 )

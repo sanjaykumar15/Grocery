@@ -7,7 +7,7 @@ sealed class CategoryItemsEvents {
     data class OnInitRefresh(
         val type: String,
         val title: String,
-        val tyreId: Int,
+        val typeId: Int,
     ) : CategoryItemsEvents()
 
     data class ShowToast(val msg: String) : CategoryItemsEvents()

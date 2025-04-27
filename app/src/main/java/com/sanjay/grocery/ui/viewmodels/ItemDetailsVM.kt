@@ -24,13 +24,13 @@ class ItemDetailsVM @Inject constructor(
     fun eventHandler(event: ItemDetailsEvents) {
         when (event) {
             is ItemDetailsEvents.OnInitRefresh -> {
-                val item = realmHelper.getCategoryItem(event.tyreId, event.typeName)
+                val item = realmHelper.getCategoryItem(event.typeId, event.typeName)
                 if (item == null) {
                     state = state.copy(error = "Item not found")
                     return
                 }
                 state = state.copy(
-                    selectedTypeID = event.tyreId,
+                    selectedTypeID = event.typeId,
                     selectedTypeName = event.typeName,
                     item = item,
                     isFavorite = item.isFav

@@ -67,7 +67,7 @@ fun ItemDetailsScreen(
     if (state.isInit) {
         onEvent(
             ItemDetailsEvents.OnInitRefresh(
-                tyreId = navItem.typeId,
+                typeId = navItem.typeId,
                 typeName = navItem.type
             )
         )

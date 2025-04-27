@@ -5,7 +5,7 @@ sealed class ItemDetailsEvents {
     data object OnFavClicked : ItemDetailsEvents()
 
     data class OnInitRefresh(
-        val tyreId: Int,
+        val typeId: Int,
         val typeName: String,
     ) : ItemDetailsEvents()
 
