@@ -63,13 +63,18 @@ class RealmHelper @Inject constructor(
         }
     }
 
-    suspend fun saveCategoryItems(categoryItems: List<CategoryItems>) {
+    suspend fun saveCategoryItems(categoryItems: List<CategoryItems>, typeId: Int?) {
         try {
             withContext(singleThreadDispatcher) {
                 runCloseableTransaction { transactionRealm ->
-                    transactionRealm.where(RCategoryItems::class.java)
+                    val ids = categoryItems.map { it.typeName }
+                    val results = transactionRealm.where(RCategoryItems::class.java)
+                        .equalTo(CATEGORY_ITEM_TYPE_ID, typeId)
+                        .and()
+                        .not()
+                        .`in`(CATEGORY_ITEM_TYPE_NAME, ids.toTypedArray())
                         .findAll()
-                        .deleteAllFromRealm()
+                    results.deleteAllFromRealm()
                 }
             }
             withContext(singleThreadDispatcher) {

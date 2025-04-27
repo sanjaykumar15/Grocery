@@ -44,7 +44,7 @@ class ApiService @Inject constructor(
         }
     }
 
-    suspend fun getCategoryItems(type: String): ApiResults {
+    suspend fun getCategoryItems(type: String, typeId: Int?): ApiResults {
         val con = apiClient.getConnection(
             url = Constants.HttpConst.CATEGORY_ITEMS + type,
             method = GET
@@ -60,7 +60,7 @@ class ApiService @Inject constructor(
                 con.disconnect()
                 Log.d(tag, "Response: $res")
                 val responseList = Json.decodeFromString<List<CategoryItems>>(res.toString())
-                realmHelper.saveCategoryItems(responseList)
+                realmHelper.saveCategoryItems(responseList, typeId)
                 return ApiResults(success = true)
             }
         } catch (e: Exception) {

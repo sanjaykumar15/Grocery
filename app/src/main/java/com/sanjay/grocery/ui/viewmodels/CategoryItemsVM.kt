@@ -33,7 +33,14 @@ class CategoryItemsVM @Inject constructor(
                     title = event.title,
                     isInit = false
                 )
-                getCategoryItems(event.type)
+                val categoryList = realmHelper.getCategoryThumbnailItems(event.typeId)
+                if (categoryList.isEmpty()) {
+                    getCategoryItems(event.type)
+                } else {
+                    state = state.copy(
+                        categoryItems = categoryList
+                    )
+                }
             }
 
             is CategoryItemsEvents.OnRefresh -> {
@@ -67,7 +74,7 @@ class CategoryItemsVM @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val results = apiService.getCategoryItems(type)
+                val results = apiService.getCategoryItems(type, state.selectedTypeID)
                 state = state.copy(
                     categoryItems = realmHelper.getCategoryThumbnailItems(state.selectedTypeID),
                     isLoading = false,
